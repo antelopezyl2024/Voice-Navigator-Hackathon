@@ -1,10 +1,10 @@
-APIs
-  -POST /api/query
+###APIs
+  '-POST /api/query'
 
-Json:
-  Sample:
-  -request:
-      {
+###Json:
+  ###Sample:
+  **-request:***
+   '''{
         "text": "Show world GDP graph"
       }
 
