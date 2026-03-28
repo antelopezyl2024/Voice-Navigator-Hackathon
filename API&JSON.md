@@ -3,16 +3,16 @@
   
 ###Json:  
   ###Sample:  
-  **-request:**
+  **-request:**  
    '''{
         "text": "Show world GDP graph"  
       }  
 
-  **-response:**
+  **-response:**  
       {
-        "success": true,
-        "intent": "market_api",
-        "query": "Show world GDP graph",
+        "success": true,  
+        "intent": "market_api",  
+         "query": "Show world GDP graph",
         "answerText": "Here is the GDP trend.",
         "data": [
           {"x": "2020", "y": -2.9},
