@@ -2,6 +2,7 @@ APIs
   -POST /api/query
 
 Json:
+  Sample:
   -request:
       {
         "text": "Show world GDP graph"
