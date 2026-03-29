@@ -12,7 +12,12 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSSpeechRecognitionUsageDescription": "Allow VoiceNavigator to recognize your speech.",
+        "NSMicrophoneUsageDescription": "Allow VoiceNavigator to use your microphone for voice commands."
+      },
+      "bundleIdentifier": "com.anonymous.VoiceNavigatorApp"
     },
     "android": {
       "adaptiveIcon": {
@@ -20,10 +25,24 @@
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.anonymous.VoiceNavigatorApp",
+      "usesCleartextTraffic": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Allow VoiceNavigator to use your microphone for voice commands.",
+          "speechRecognitionPermission": "Allow VoiceNavigator to recognize your speech."
+        }
+      ]
+    ]
   }
 }
