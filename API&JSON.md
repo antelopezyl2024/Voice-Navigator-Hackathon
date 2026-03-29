@@ -24,8 +24,9 @@
             "page": null,  
             "section": null,    
             "snippet": null    
+            "imageUrl": "/images/warning_sign.png",  
+            "imageCaption": "Example of warning sign"  
             }],  
-         "images": [],  
           "chart": {  
                     "type": "line",  
                     "xLabel": "Year",  
@@ -41,6 +42,5 @@ Field Notes:
   answerText: the text answer displayed to the user  
   data: structured data used for charts or lists  
   sources: source information, used for RAG responses  
-  images: [] for market research and food crisses; DMV RAG might need it.
   chart: chart configuration  
   error: error message or details
