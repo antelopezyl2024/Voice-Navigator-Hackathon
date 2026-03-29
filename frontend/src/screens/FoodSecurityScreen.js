@@ -39,8 +39,8 @@ export default function FoodSecurityScreen() {
     setMessages((prev) => [...prev, userMsg]);
     setLoading(true);
     try {
-      const { answer, imageUrls } = await queryFood(question);
-      const botMsg = { id: (Date.now() + 1).toString(), role: 'assistant', content: answer, imageUrls };
+      const { answer, imageUrls, sourcePages, sourceDocs } = await queryFood(question);
+      const botMsg = { id: (Date.now() + 1).toString(), role: 'assistant', content: answer, imageUrls, sourcePages, sourceDocs };
       setMessages((prev) => [...prev, botMsg]);
       Speech.speak(answer.substring(0, 500), { rate: 0.9 });
     } catch (e) {

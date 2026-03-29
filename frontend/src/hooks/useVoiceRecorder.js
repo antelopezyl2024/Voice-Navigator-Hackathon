@@ -12,15 +12,15 @@ const RECORDING_OPTIONS = {
     audioEncoder: Audio.AndroidAudioEncoder?.AAC ?? 3,
     sampleRate: 16000,
     numberOfChannels: 1,
-    bitRate: 64000,
+    bitRate: 128000,
   },
   ios: {
     extension: '.m4a',
     outputFormat: Audio.IOSOutputFormat?.MPEG4AAC ?? 'aac ',
-    audioQuality: Audio.IOSAudioQuality?.HIGH ?? 0x60,
+    audioQuality: Audio.IOSAudioQuality?.MAX ?? 0x7f,
     sampleRate: 16000,
     numberOfChannels: 1,
-    bitRate: 64000,
+    bitRate: 128000,
     linearPCMBitDepth: 16,
     linearPCMIsBigEndian: false,
     linearPCMIsFloat: false,
@@ -46,6 +46,7 @@ export function useVoiceRecorder(onTranscript, onError) {
         playsInSilentModeIOS: true,
         shouldDuckAndroid: true,
         playThroughEarpieceAndroid: false,
+        staysActiveInBackground: false,
       });
 
       const { recording } = await Audio.Recording.createAsync(RECORDING_OPTIONS);
@@ -65,6 +66,8 @@ export function useVoiceRecorder(onTranscript, onError) {
     setIsTranscribing(true);
 
     try {
+      // Delay so the last word isn't cut off
+      await new Promise(r => setTimeout(r, 1200));
       await recording.stopAndUnloadAsync();
       await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
       const uri = recording.getURI();

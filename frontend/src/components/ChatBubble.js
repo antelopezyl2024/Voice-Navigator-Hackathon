@@ -19,6 +19,8 @@ export default function ChatBubble({ message }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [failedUris, setFailedUris] = useState({});
   const imageUrls = (message.imageUrls || []).filter(u => !u.endsWith('.jpx'));
+  const sourcePages = message.sourcePages || [];
+  const sourceDocs = message.sourceDocs || [];
 
   return (
     <View style={[styles.row, isUser ? styles.rowRight : styles.rowLeft]}>
@@ -26,6 +28,12 @@ export default function ChatBubble({ message }) {
         <Text style={[styles.text, isUser ? styles.userText : styles.assistantText]}>
           {message.content}
         </Text>
+
+        {!isUser && (sourceDocs.length > 0 || sourcePages.length > 0) && (
+          <Text style={styles.sourceText}>
+            {`📄 Source: ${sourceDocs.join(', ')}${sourcePages.length > 0 ? ` | Page${sourcePages.length > 1 ? 's' : ''} ${sourcePages.join(', ')}` : ''}`}
+          </Text>
+        )}
 
         {imageUrls.length > 0 && (
           <View style={styles.imagesRow}>
@@ -66,6 +74,7 @@ const styles = StyleSheet.create({
   text: { fontSize: 14, lineHeight: 20 },
   userText: { color: '#fff' },
   assistantText: { color: '#1a1a2e' },
+  sourceText: { fontSize: 11, color: '#6b7280', marginTop: 6, fontStyle: 'italic' },
   imagesRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 8, gap: 6 },
   thumbnail: { width: 100, height: 80, borderRadius: 8, backgroundColor: '#e0e7ff', borderWidth: 1, borderColor: '#c7d2fe' },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', alignItems: 'center', justifyContent: 'center' },

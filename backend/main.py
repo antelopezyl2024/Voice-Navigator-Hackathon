@@ -46,6 +46,8 @@ class QueryResponse(BaseModel):
     answer: str
     question: str
     image_urls: List[str] = []
+    source_pages: List[int] = []
+    source_docs: List[str] = []
 
 
 @app.post("/transcribe")
@@ -56,12 +58,16 @@ async def transcribe(file: UploadFile = File(...)):
     try:
         transcription = groq_client.audio.transcriptions.create(
             file=(file.filename or "audio.m4a", audio_bytes),
-            model="whisper-large-v3-turbo",
+            model="whisper-large-v3",
             response_format="text",
             language="en",
+            temperature=0.0,
+            prompt="DMV, California driver handbook, traffic signs, speed limit, BAC, blood alcohol, right-of-way, food security, FAO, SOFI, undernourishment, malnutrition, ESG, CO2, carbon emissions, World Bank, GDP",
         )
         text = transcription if isinstance(transcription, str) else transcription.text
-        return {"text": text.strip()}
+        text = text.strip()
+        print(f"Transcribed: '{text}'")
+        return {"text": text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Transcription failed: {str(e)}")
 
@@ -83,11 +89,13 @@ def query_food(req: QueryRequest):
         raise HTTPException(status_code=400, detail="Question cannot be empty")
     if rag.food_index is None:
         raise HTTPException(status_code=503, detail="Food Security index not loaded")
-    answer, image_filenames = rag.query_rag(
-        rag.food_index, rag.food_chunks, rag.food_chunk_pages, rag.food_page_images, req.question
+    answer, image_filenames, source_pages, source_docs = rag.query_rag(
+        rag.food_index, rag.food_chunks, rag.food_chunk_pages, rag.food_page_images, req.question,
+        chunk_sources=rag.food_chunk_sources
     )
     image_urls = [f"/images/{fn}" for fn in image_filenames]
-    return QueryResponse(answer=answer, question=req.question, image_urls=image_urls)
+    return QueryResponse(answer=answer, question=req.question, image_urls=image_urls,
+                         source_pages=[p+1 for p in source_pages], source_docs=source_docs)
 
 
 @app.post("/query/dmv", response_model=QueryResponse)
@@ -96,8 +104,10 @@ def query_dmv(req: QueryRequest):
         raise HTTPException(status_code=400, detail="Question cannot be empty")
     if rag.dmv_index is None:
         raise HTTPException(status_code=503, detail="DMV index not loaded")
-    answer, image_filenames = rag.query_rag(
-        rag.dmv_index, rag.dmv_chunks, rag.dmv_chunk_pages, rag.dmv_page_images, req.question
+    answer, image_filenames, source_pages, source_docs = rag.query_rag(
+        rag.dmv_index, rag.dmv_chunks, rag.dmv_chunk_pages, rag.dmv_page_images, req.question,
+        chunk_sources=rag.dmv_chunk_sources
     )
     image_urls = [f"/images/{fn}" for fn in image_filenames]
-    return QueryResponse(answer=answer, question=req.question, image_urls=image_urls)
+    return QueryResponse(answer=answer, question=req.question, image_urls=image_urls,
+                         source_pages=[p+1 for p in source_pages], source_docs=source_docs)

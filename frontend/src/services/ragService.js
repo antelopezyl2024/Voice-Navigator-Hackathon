@@ -10,8 +10,8 @@ export async function queryFood(question) {
     { question },
     { timeout: 30000 }
   );
-  const { answer, image_urls = [] } = response.data;
-  return { answer, imageUrls: image_urls.map(u => `${BASE_URL}${u}`) };
+  const { answer, image_urls = [], source_pages = [], source_docs = [] } = response.data;
+  return { answer, imageUrls: image_urls.map(u => `${BASE_URL}${u}`), sourcePages: source_pages, sourceDocs: source_docs };
 }
 
 export async function queryDMV(question) {
@@ -20,8 +20,8 @@ export async function queryDMV(question) {
     { question },
     { timeout: 30000 }
   );
-  const { answer, image_urls = [] } = response.data;
-  return { answer, imageUrls: image_urls.map(u => `${BASE_URL}${u}`) };
+  const { answer, image_urls = [], source_pages = [], source_docs = [] } = response.data;
+  return { answer, imageUrls: image_urls.map(u => `${BASE_URL}${u}`), sourcePages: source_pages, sourceDocs: source_docs };
 }
 
 export async function checkHealth() {
