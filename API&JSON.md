@@ -20,6 +20,7 @@
                    {"x": "2021", "y": 6.3}  
                  ],  
          "sources": [],  
+         "images": [],  
           "chart": {  
                     "type": "line"  
                     },  
