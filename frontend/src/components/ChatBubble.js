@@ -17,7 +17,8 @@ function ImageViewer({ uri, onClose }) {
 export default function ChatBubble({ message }) {
   const isUser = message.role === 'user';
   const [selectedImage, setSelectedImage] = useState(null);
-  const imageUrls = message.imageUrls || [];
+  const [failedUris, setFailedUris] = useState({});
+  const imageUrls = (message.imageUrls || []).filter(u => !u.endsWith('.jpx'));
 
   return (
     <View style={[styles.row, isUser ? styles.rowRight : styles.rowLeft]}>
@@ -28,12 +29,13 @@ export default function ChatBubble({ message }) {
 
         {imageUrls.length > 0 && (
           <View style={styles.imagesRow}>
-            {imageUrls.map((uri, i) => (
+            {imageUrls.filter(uri => !failedUris[uri]).map((uri, i) => (
               <TouchableOpacity key={i} onPress={() => setSelectedImage(uri)} activeOpacity={0.8}>
                 <Image
                   source={{ uri }}
                   style={styles.thumbnail}
                   resizeMode="contain"
+                  onError={() => setFailedUris(prev => ({ ...prev, [uri]: true }))}
                 />
               </TouchableOpacity>
             ))}

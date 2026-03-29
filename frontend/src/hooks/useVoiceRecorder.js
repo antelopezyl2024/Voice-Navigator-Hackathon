@@ -79,12 +79,26 @@ export function useVoiceRecorder(onTranscript, onError) {
         type: 'audio/m4a',
       });
 
-      const response = await axios.post(`${BASE_URL}/transcribe`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        timeout: 20000,
-      });
-
-      const text = response.data?.text?.trim();
+      let json = null;
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 60000);
+          const response = await fetch(`${BASE_URL}/transcribe`, {
+            method: 'POST',
+            body: formData,
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+          if (!response.ok) throw new Error(`Server error: ${response.status}`);
+          json = await response.json();
+          break;
+        } catch (retryErr) {
+          if (attempt === 3) throw retryErr;
+          await new Promise(r => setTimeout(r, 2000 * attempt));
+        }
+      }
+      const text = json?.text?.trim();
       if (text) {
         onTranscript(text);
       } else {
