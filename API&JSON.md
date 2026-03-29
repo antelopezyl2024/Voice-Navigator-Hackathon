@@ -19,10 +19,17 @@
                    {"x": "2020", "y": -2.9},  
                    {"x": "2021", "y": 6.3}  
                  ],  
-         "sources": [],  
+         "sources": [{  
+            "document": "World Bank API",  
+            "page": null,  
+            "section": null,    
+            "snippet": null    
+            }],  
          "images": [],  
           "chart": {  
-                    "type": "line"  
+                    "type": "line",  
+                    "xLabel": "Year",  
+                    "yLabel": "GDP Growth"  
                     },  
           "error": null  
        }
