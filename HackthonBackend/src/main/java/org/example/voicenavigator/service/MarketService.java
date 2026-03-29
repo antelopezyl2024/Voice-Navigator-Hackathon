@@ -30,7 +30,7 @@ public class MarketService {
 
             List<Map<String, Object>> chartData = extractChartData(raw);
 
-            response.setAnswerText("Here is the market trend result.");
+            response.setAnswerText("Here is the result.");
             response.setData(chartData);
 
             Map<String, Object> chart = new HashMap<>();
